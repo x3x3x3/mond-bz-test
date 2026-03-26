@@ -16,11 +16,14 @@ We test the prediction that $\mathcal{B}(z)$ is a universal constant $1/(2\pi) \
 We find that current data are consistent with the hypothesis, with no statistically significant evidence for redshift evolution.
 
 ## Repository Structure
-- `main.tex`: Main MNRAS Letter manuscript
-- `supplementary.tex`: Supplementary material
-- `references.bib`: BibTeX references
-- `code/`: Python code for data analysis and plotting
-- `image.png`: Figure 1 in the paper
+├── README.md # This file
+├── LICENSE # MIT License
+├── main.tex # Main MNRAS Letter manuscript (as submitted)
+├── supplementary.tex # Supplementary material (as submitted)
+├── references.bib # BibTeX references
+├── image.png # Figure 1 in the paper
+└── code/
+└── mond_bz_analysis.py # Core analysis and plotting functions
 
 ## Quick Start
 ```bash
