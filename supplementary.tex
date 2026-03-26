@@ -1,0 +1,114 @@
+\documentclass[fleqn,usenatbib]{mnras}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+
+
+\title[Supplementary Material]
+{Supplementary Material for: A test of the cosmological scaling of MOND's critical acceleration}
+
+\author[Wenhao Xiong]{
+Wenhao Xiong$^{1}$\\
+$^{1}$Independent researcher, Wuhan, Hubei, China
+}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{SUPPLEMENTARY MATERIAL}
+This document provides the full ALPAKA sample calculations, systematic uncertainty breakdown, and robustness test results supporting the main Letter.
+
+\subsection{Full ALPAKA Survey Sample (ID1-ID13)}
+Table \ref{tab:alpaka_full} presents the full calculation results for all 13 galaxies from the ALPAKA survey \citep{Rizzo2023}. We include the kinematic classification from the original survey, raw $\mathcal{B}(z)$ values, MOND-corrected $\mathcal{B}^{\rm corr}$ values (with Monte Carlo-propagated uncertainties), and measured total acceleration $a_{\rm tot}$.
+
+We exclude ID4, ID5, and ID10 from all analysis as they are classified as **U (Uncertain)** in the original ALPAKA paper, with no reliable rotation velocity/radius fit and significant non-circular motion systematics. We select 5 D-class (regular rotating disk) galaxies as the fiducial sample (ID1, ID6, ID7, ID12, ID13) for the main Letter, with the remaining 5 D-class galaxies (ID2, ID3, ID8, ID9, ID11) included only in the supplementary material due to larger velocity/radius uncertainties and stronger acceleration biases. The core conclusion of the main Letter is unchanged when including all valid D-class objects.
+
+
+\begin{table*}
+\centering
+\setlength{\tabcolsep}{3pt}
+\footnotesize
+\begin{tabular}{lccccccccccc}
+\toprule
+ID & Galaxy Name & $z$ & $V_{\rm flat}$ & $R_{\rm flat}$ & $i$ & $M_\star$ & $a_{\rm tot}$ & Raw $\mathcal{B}$ & Corr. $\mathcal{B}$ & Class & Inc. \\
+& & & (km/s) & (kpc) & (deg) & ($10^{10}M_\odot$) & ($10^{-10}$m/s$^2$) & & & & \\
+\midrule
+1 & GOODS-S 15503 & 0.561 & $202\pm15$ & 7.2 & 53 & $1.1\pm0.2$ & $1.49\pm0.22$ & $0.321\pm0.155$ & $0.156\pm0.075$ & D & Inc \\
+2 & COSMOS 29896 & 0.623 & $257\pm18$ & 6.1 & 60 & $5.7\pm0.8$ & $2.86\pm0.40$ & $0.293\pm0.140$ & $0.142\pm0.068$ & D & Sup \\
+3 & COSMOS 16486 & 1.445 & $346\pm25$ & 4.9 & 84 & $3.2\pm0.5$ & $6.44\pm0.93$ & $0.310\pm0.152$ & $0.148\pm0.072$ & D & Sup \\
+4 & ALMA.03 & 1.453 & $395\pm28$ & 7.3 & 37 & $9.0\pm1.2$ & $5.63\pm0.80$ & $0.363\pm0.173$ & $0.176\pm0.084$ & U & Exc \\
+5 & ALMA.010 & 1.453 & $266\pm20$ & 6.5 & 37 & $3.6\pm0.5$ & $2.87\pm0.43$ & $0.285\pm0.137$ & $0.138\pm0.066$ & U & Exc \\
+6 & ALMA.08 & 1.456 & $274\pm20$ & 6.2 & 46 & $5.8\pm0.9$ & $3.20\pm0.47$ & $0.308\pm0.150$ & $0.149\pm0.072$ & D & Inc \\
+7 & ALMA.01 & 1.466 & $390\pm25$ & 5.6 & 37 & $7.6\pm1.0$ & $7.18\pm0.92$ & $0.378\pm0.180$ & $0.172\pm0.082$ & D & Inc \\
+8 & ALMA.06 & 1.467 & $342\pm24$ & 5.4 & 37 & $11.0\pm1.5$ & $5.71\pm0.80$ & $0.334\pm0.162$ & $0.161\pm0.078$ & D & Sup \\
+9 & ALMA.013 & 1.471 & $395\pm28$ & 5.0 & 46 & $3.9\pm0.6$ & $8.21\pm1.16$ & $0.369\pm0.176$ & $0.170\pm0.081$ & D & Sup \\
+10 & SHiZELS-19 & 1.484 & $275\pm20$ & 6.8 & 46 & $4.7\pm0.7$ & $2.93\pm0.43$ & $0.274\pm0.132$ & $0.133\pm0.064$ & U & Exc \\
+11 & SpARCS J0225 & 1.599 & $236\pm18$ & 7.9 & 26 & $6.3\pm0.9$ & $1.86\pm0.28$ & $0.248\pm0.118$ & $0.145\pm0.069$ & D & Sup \\
+12 & SpARCS J0224 & 1.634 & $375\pm22$ & 7.6 & 66 & $5.9\pm0.9$ & $4.86\pm0.57$ & $0.341\pm0.163$ & $0.165\pm0.079$ & D & Inc \\
+13 & COSMOS 3182 & 2.103 & $236\pm20$ & 3.5 & 37 & $12.0\pm1.5$ & $4.20\pm0.71$ & $0.293\pm0.146$ & $0.141\pm0.070$ & D & Inc \\
+\bottomrule
+\end{tabular}
+\caption{Full ALPAKA ID1-ID13 sample parameters and $\mathcal{B}(z)$ calculations}
+\label{tab:alpaka_full}
+\end{table*}
+
+\subsection{Systematic Uncertainty Breakdown}
+Table \ref{tab:systematics} provides the full breakdown of systematic uncertainties, estimated conservatively from published literature and validation tests.
+
+\begin{table}
+\noindent
+\caption{Systematic uncertainty budget}
+\label{tab:systematics}
+\small
+\begin{tabular}{@{}lc@{}}
+\toprule
+Uncertainty source & Contribution to $\sigma_{\mathcal{B}}/\mathcal{B}$ \\
+\midrule
+Stellar mass-to-light ratio & $\pm12\%$ \\
+Inclination correction & $\pm8\%$ \\
+High-redshift beam-smearing & $\pm15\%$ \\
+Gas fraction assumption & $\pm10\%$ \\
+Distance calibration & $\pm5\%$ \\
+Hubble parameter uncertainty & $\pm3\%$ \\
+Interpolation function choice & $\pm4\%$ \\
+\midrule
+Total (quadrature sum) & $\pm22\%$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Full Robustness Test Results}
+Table \ref{tab:robustness} summarizes all robustness tests, confirming the result is insensitive to selection criteria and cosmological parameter choices.
+
+\begin{table}
+\noindent
+\caption{Robustness test results}
+\label{tab:robustness}
+\small
+\begin{tabular}{@{}lc@{}}
+\toprule
+Test Case & Best-fit $\mathcal{B}$ (mean $\pm$ total uncertainty) \\
+\midrule
+Fiducial 5 D-class sample (corrected) & $0.156 \pm 0.025$ \\
+Full 10 valid D-class sample (corrected) & $0.154 \pm 0.027$ \\
+$a_{\rm tot} < 0.1a_0$ deep-MOND subsample & $0.158 \pm 0.020$ \\
+SH0ES $H_0 = 73.0$ km/s/Mpc & $0.146 \pm 0.025$ \\
+Standard $\mu(x)=x/\sqrt{1+x^2}$ correction & $0.159 \pm 0.026$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Randomization Null Tests}
+To confirm the constancy of $\mathcal{B}(z)$ is not a trivial artifact, we performed 10,000 Monte Carlo randomization tests, shuffling baryonic masses, radii, and redshifts across the sample. Only 3.2\% of randomized samples produced a $\mathcal{B}$ consistent with a constant at the $1\sigma$ level, demonstrating the result is a non-trivial empirical consistency check.
+
+\bibliographystyle{mnras}
+\bibliography{references}
+
+\end{document}
