@@ -22,7 +22,9 @@ We find that current data are consistent with the hypothesis, with no statistica
 - `code/`: Python code for data analysis and plotting
 - `image.png`: Figure 1 in the paper
 
-## Compilation
-To compile the main manuscript:
+## Quick Start
 ```bash
-pdflatex main.tex
+pip install numpy pandas scipy matplotlib
+cd code
+python mond_bz_analysis.py     
+python plot_figure.py      
