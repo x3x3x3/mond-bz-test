@@ -22,8 +22,6 @@ We find that current data are consistent with the hypothesis, with no statistica
 ---
 
 ## Repository Structure
-
-## Repository Structure
 ├── README.md # This file
 ├── LICENSE # MIT License
 ├── main.tex # Main MNRAS Letter manuscript (as submitted)
