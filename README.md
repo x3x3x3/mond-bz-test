@@ -23,13 +23,21 @@ We find that current data are consistent with the hypothesis, with no statistica
 
 ## Repository Structure
 ├── README.md # This file
+
 ├── LICENSE # MIT License
+
 ├── main.tex # Main MNRAS Letter manuscript (as submitted)
+
 ├── supplementary.tex # Supplementary material (as submitted)
+
 ├── references.bib # BibTeX references
+
 ├── image.png # Figure 1 in the paper
+
 └── code/
+
 └── mond_bz_analysis.py # Core analysis and plotting functions
+
 
 ## Quick Start
 ```bash
