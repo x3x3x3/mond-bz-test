@@ -45,5 +45,5 @@ We find that current data are consistent with the hypothesis, with no statistica
 ## Quick Start
 ```bash
 pip install numpy pandas scipy matplotlib
-cd code
-python mond_bz_analysis.py     
+
+python code/mond_bz_analysis.py     
