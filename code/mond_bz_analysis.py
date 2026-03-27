@@ -1,243 +1,145 @@
+#!/usr/bin/env python3
+"""
+plot_Bz.py
+Generate Figure 1 (B(z) vs redshift) from SPARC and ALPAKA data.
+Data files (MassModels_Lelli2016c.mrt and alpaka_rar.csv) must be in the ../data/ directory.
+alpaka_rar.csv must contain the columns 'B_corr' and 'B_corr_err'.
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib import rcParams
+import pandas as pd
+import os
+import sys
 
-# Set up matplotlib for publication-quality plots
-rcParams['font.family'] = 'serif'
-rcParams['font.serif'] = ['Times New Roman']
-rcParams['font.size'] = 12
-rcParams['axes.labelsize'] = 14
-rcParams['axes.titlesize'] = 14
-rcParams['xtick.labelsize'] = 12
-rcParams['ytick.labelsize'] = 12
-rcParams['legend.fontsize'] = 12
-rcParams['figure.dpi'] = 300
-rcParams['savefig.dpi'] = 300
-rcParams['savefig.bbox'] = 'tight'
+# ==================== Path settings ====================
+script_dir = os.path.dirname(os.path.abspath(__file__))
+data_dir = os.path.join(script_dir, '..', 'data')
 
-# =============================================================================
-# Core physical constants and cosmology
-# =============================================================================
-C = 3e8  # Speed of light in m/s
-H0_PLANCK = 67.4  # Planck 2018 H0 in km/s/Mpc
-OMEGA_M_PLANCK = 0.311
-OMEGA_LAMBDA_PLANCK = 0.689
-A0_LOCAL_FIT = 1.2e-10  # Local best-fit a0 in m/s^2
-A0_THEORETICAL_Z0 = C * H0_PLANCK * 1000 / (2 * np.pi * 3.086e22)  # ~1.04e-10 m/s^2
-BZ_THEORETICAL = 1 / (2 * np.pi)  # ~0.159
+sparc_mrt = os.path.join(data_dir, 'MassModels_Lelli2016c.mrt')
+alpaka_csv = os.path.join(data_dir, 'alpaka_rar.csv')
+sparc_csv = os.path.join(data_dir, 'sparc_rar.csv')
 
-def H_z(z, H0=H0_PLANCK, Omega_m=OMEGA_M_PLANCK, Omega_Lambda=OMEGA_LAMBDA_PLANCK):
-    """
-    Calculate Hubble parameter at redshift z.
-    
-    Parameters
-    ----------
-    z : float or array
-        Redshift
-    H0 : float, optional
-        Hubble constant at z=0 in km/s/Mpc
-    Omega_m : float, optional
-        Matter density parameter
-    Omega_Lambda : float, optional
-        Dark energy density parameter
-    
-    Returns
-    -------
-    H : float or array
-        Hubble parameter at redshift z in km/s/Mpc
-    """
-    return H0 * np.sqrt(Omega_m * (1 + z)**3 + Omega_Lambda)
+# ==================== Generate sparc_rar.csv if missing ====================
+def generate_sparc_rar():
+    print("Generating sparc_rar.csv from MassModels_Lelli2016c.mrt ...")
+    try:
+        kpc_to_m = 3.086e19
+        kms_to_ms = 1000.0
 
-# =============================================================================
-# Core analysis functions
-# =============================================================================
-def calculate_Bz(a_tot, a_N, z, c=C, H0=H0_PLANCK):
-    """
-    Calculate the dimensionless observable B(z).
-    
-    Parameters
-    ----------
-    a_tot : float or array
-        Total centripetal acceleration in m/s^2
-    a_N : float or array
-        Newtonian acceleration from baryonic matter in m/s^2
-    z : float or array
-        Redshift
-    c : float, optional
-        Speed of light in m/s
-    H0 : float, optional
-        Hubble constant at z=0 in km/s/Mpc
-    
-    Returns
-    -------
-    Bz : float or array
-        Dimensionless observable B(z)
-    """
-    # Get H(z) in km/s/Mpc, convert to 1/s
-    H_z_val = H_z(z, H0=H0)
-    H_z_s = H_z_val * 1000 / 3.086e22
-    
-    # Calculate B(z)
-    Bz = a_tot**2 / (c * H_z_s * a_N)
-    
-    return Bz
+        # Read Table2.mrt (skip 29 header lines, adjust if needed)
+        df = pd.read_csv(sparc_mrt, delim_whitespace=True, comment='#',
+                         names=['ID', 'D', 'R', 'Vobs', 'e_Vobs', 'Vgas', 'Vdisk', 'Vbul', 'SBdisk', 'SBbul'],
+                         skiprows=29)
 
-def calculate_Bz_corr(a_tot, a_N, z, mu_function='simple'):
-    """
-    Calculate the corrected B(z) for non-deep-MOND regimes.
-    
-    Parameters
-    ----------
-    a_tot : float or array
-        Total centripetal acceleration in m/s^2
-    a_N : float or array
-        Newtonian acceleration from baryonic matter in m/s^2
-    z : float or array
-        Redshift
-    mu_function : str, optional
-        Interpolation function ('simple' or 'standard')
-    
-    Returns
-    -------
-    Bz_corr : float or array
-        Corrected dimensionless observable B(z)
-    """
-    # First calculate raw B(z)
-    Bz_raw = calculate_Bz(a_tot, a_N, z)
-    
-    # Calculate a_tot/(c H(z)) term
-    H_z_val = H_z(z)
-    H_z_s = H_z_val * 1000 / 3.086e22
-    term = a_tot / (C * H_z_s)
-    
-    # Apply correction based on interpolation function
-    if mu_function == 'simple':
-        # Simple mu(x) = x/(1+x)
-        Bz_corr = (Bz_raw - term) / (1 - term)
-    else:
-        # Standard mu(x) = x/sqrt(1+x^2) - correction derived in paper
-        # For simplicity, we use the simple form as in the main paper
-        Bz_corr = (Bz_raw - term) / (1 - term)
-    
-    return Bz_corr
+        idx = df.groupby('ID')['R'].idxmax()
+        df_outer = df.loc[idx].copy()
 
-def monte_carlo_error_propagation(a_tot, a_tot_err, a_N, a_N_err, z, z_err=0, n_samples=10000):
-    """
-    Monte Carlo error propagation for B(z)^corr.
-    
-    Parameters
-    ----------
-    a_tot : float
-        Total centripetal acceleration in m/s^2
-    a_tot_err : float
-        Uncertainty in a_tot
-    a_N : float
-        Newtonian acceleration from baryonic matter in m/s^2
-    a_N_err : float
-        Uncertainty in a_N
-    z : float
-        Redshift
-    z_err : float, optional
-        Uncertainty in redshift (usually negligible)
-    n_samples : int, optional
-        Number of Monte Carlo samples
-    
-    Returns
-    -------
-    Bz_mean : float
-        Mean corrected B(z)
-    Bz_err : float
-        1-sigma uncertainty in corrected B(z)
-    """
-    # Generate random samples
-    a_tot_samples = np.random.normal(a_tot, a_tot_err, n_samples)
-    a_N_samples = np.random.normal(a_N, a_N_err, n_samples)
-    z_samples = np.random.normal(z, z_err, n_samples)
-    
-    # Calculate B(z)^corr for each sample
-    Bz_samples = calculate_Bz_corr(a_tot_samples, a_N_samples, z_samples)
-    
-    # Calculate mean and 1-sigma uncertainty
-    Bz_mean = np.mean(Bz_samples)
-    Bz_err = np.std(Bz_samples)
-    
-    return Bz_mean, Bz_err
+        R_m = df_outer['R'].values * kpc_to_m
+        Vobs_ms = df_outer['Vobs'].values * kms_to_ms
+        Vobs_err_ms = df_outer['e_Vobs'].values * kms_to_ms
 
-# =============================================================================
-# Plotting function (matches Figure 1 in the paper)
-# =============================================================================
-def plot_Bz_vs_redshift(save_path='image.png'):
-    """
-    Plot B(z) vs redshift, matching Figure 1 in the paper.
-    
-    Note: This function uses the published results from the paper.
-          To reproduce from raw data, download SPARC and ALPAKA data
-          from the sources listed in the README.
-    
-    Parameters
-    ----------
-    save_path : str, optional
-        Path to save the figure
-    """
-    # Create figure
-    fig, ax = plt.subplots(figsize=(6, 7))
-    
-    # Plot theoretical prediction
-    ax.axhline(y=BZ_THEORETICAL, color='r', linestyle='--', 
-               label=r'Theoretical prediction $\mathcal{B}=1/(2\pi) \approx 0.159$')
-    
-    # -------------------------------------------------------------------------
-    # Local SPARC sample (illustrative, based on paper results)
-    # -------------------------------------------------------------------------
-    # For full reproducibility, download SPARC data from http://astroweb.cwru.edu/SPARC/
-    # Here we show the mean and 1-sigma band as reported in the paper
-    local_mean = 0.159
-    local_std = 0.025
-    ax.axhline(y=local_mean, color='gray', linestyle='-', alpha=0.7)
-    ax.fill_between([-0.1, 2.3], local_mean - local_std, local_mean + local_std, 
-                    color='gray', alpha=0.2, label=r'Local mean $\pm 1\sigma$')
-    
-    # -------------------------------------------------------------------------
-    # Fiducial high-redshift ALPAKA sample (from Table 1 in the paper)
-    # -------------------------------------------------------------------------
-    # These are the 5 D-class galaxies from Rizzo et al. (2023) ID1, ID6, ID7, ID12, ID13
-    redshifts_highz = np.array([0.561, 1.456, 1.466, 1.634, 2.103])
-    Bz_highz = np.array([0.156, 0.149, 0.172, 0.165, 0.141])
-    Bz_highz_err = np.array([0.075, 0.072, 0.082, 0.079, 0.070])
-    
-    # Plot high-redshift points with error bars
-    ax.errorbar(redshifts_highz, Bz_highz, yerr=Bz_highz_err, 
-                fmt='o', color='b', capsize=3, elinewidth=1.5, 
-                label='ALPAKA high-$z$ sample (corrected)')
-    
-    # -------------------------------------------------------------------------
-    # Axes setup
-    # -------------------------------------------------------------------------
-    ax.set_xlabel(r'Redshift $z$')
-    ax.set_ylabel(r'Dimensionless $\mathcal{B}(z)$')
-    ax.set_xlim(-0.1, 2.3)
-    ax.set_ylim(0, 0.5)
-    ax.legend(loc='upper right', frameon=True)
-    
-    # Save figure
-    plt.savefig(save_path)
-    plt.close()
-    
-    print(f"Figure saved to {save_path}")
-    print("Note: For full raw data reproducibility, download SPARC and ALPAKA data")
-    print("      from the sources listed in the README.")
+        Vgas_ms = df_outer['Vgas'].values * kms_to_ms
+        Vdisk_ms = df_outer['Vdisk'].values * kms_to_ms
+        Vbul_ms = df_outer['Vbul'].values * kms_to_ms
+        Vbar_ms = np.sqrt(Vgas_ms**2 + Vdisk_ms**2 + Vbul_ms**2)
+        rel_err = Vobs_err_ms / Vobs_ms
+        Vbar_err_ms = Vbar_ms * rel_err
 
-# =============================================================================
-# Example usage
-# =============================================================================
-if __name__ == "__main__":
-    print("="*60)
-    print("MOND B(z) Analysis Code")
-    print("="*60)
-    print("\nThis code reproduces the analysis from Xiong (2026, MNRAS Letters submitted).")
-    print("\nFor full raw data reproducibility:")
-    print("1. Download SPARC data from http://astroweb.cwru.edu/SPARC/")
-    print("2. Download ALPAKA data from Rizzo et al. (2023) supplementary material")
-    print("\nGenerating Figure 1 (based on published results)...")
-    plot_Bz_vs_redshift()
-    print("\nDone.")
+        g_obs = Vobs_ms**2 / R_m
+        g_obs_err = 2 * Vobs_err_ms / Vobs_ms * g_obs
+        g_bar = Vbar_ms**2 / R_m
+        g_bar_err = 2 * Vbar_err_ms / Vbar_ms * g_bar
+
+        out = pd.DataFrame({
+            'name': df_outer['ID'].values,
+            'z': 0.0,
+            'g_bar': g_bar / 1e-10,
+            'g_obs': g_obs / 1e-10,
+            'g_bar_err': g_bar_err / 1e-10,
+            'g_obs_err': g_obs_err / 1e-10
+        })
+        out.to_csv(sparc_csv, index=False)
+        print(f"Created {sparc_csv} with {len(out)} galaxies.")
+        return True
+    except Exception as e:
+        print(f"Failed to generate sparc_rar.csv: {e}")
+        return False
+
+if not os.path.exists(sparc_csv):
+    print("sparc_rar.csv not found. Generating it now...")
+    if not generate_sparc_rar():
+        sys.exit(1)
+else:
+    print("sparc_rar.csv found. Using it directly.")
+
+if not os.path.exists(alpaka_csv):
+    print(f"Error: High-redshift data file not found at {alpaka_csv}")
+    sys.exit(1)
+
+# ==================== Load data ====================
+sparc = pd.read_csv(sparc_csv)
+alpaka = pd.read_csv(alpaka_csv)
+
+# Check that the required columns exist
+if 'B_corr' not in alpaka.columns or 'B_corr_err' not in alpaka.columns:
+    print("Error: alpaka_rar.csv must contain 'B_corr' and 'B_corr_err' columns.")
+    sys.exit(1)
+
+# ==================== Compute B(0) for SPARC ====================
+c = 3e8                     # m/s
+H0_km_s_Mpc = 67.4          # Planck 2018
+H0_s = H0_km_s_Mpc * 1000 / 3.086e22   # s^-1
+
+def compute_B0(g_obs_1e10, g_bar_1e10):
+    a_tot = g_obs_1e10 * 1e-10
+    a_N   = g_bar_1e10 * 1e-10
+    return (a_tot**2) / (c * H0_s * a_N)
+
+sparc['B'] = compute_B0(sparc['g_obs'], sparc['g_bar'])
+sparc['B_err'] = sparc['B'] * np.sqrt((sparc['g_obs_err']/sparc['g_obs'])**2 +
+                                      (sparc['g_bar_err']/sparc['g_bar'])**2)
+
+# ==================== Select high-redshift sample ====================
+# To use only the 5 fiducial galaxies (IDs: 1,6,7,12,13) from the Letter,
+# uncomment the next lines and adjust the names accordingly.
+# fiducial_names = ['GOODS-S_15503', 'ALMA.08', 'ALMA.01', 'SpARCS_J0224-159', 'COSMOS_3182']
+# alpaka = alpaka[alpaka['name'].isin(fiducial_names)]
+
+# ==================== Plot ====================
+theory = 1 / (2 * np.pi)   # ≈ 0.159
+
+fig, ax = plt.subplots(figsize=(8, 6))
+
+# Theoretical line
+ax.axhline(y=theory, color='red', linestyle='--', linewidth=2,
+           label=r'Theoretical prediction $\mathcal{B}=1/(2\pi) \approx 0.159$')
+
+# SPARC local galaxies
+ax.scatter(sparc['z'], sparc['B'], color='gray', alpha=0.3, s=10,
+           label='SPARC $z=0$ sample')
+
+# Local mean ±1σ band
+local_mean = sparc['B'].mean()
+local_std = sparc['B'].std()
+ax.axhline(y=local_mean, color='gray', linestyle='-', alpha=0.7)
+ax.fill_between([-0.1, 2.5], local_mean - local_std, local_mean + local_std,
+                color='gray', alpha=0.2, label=r'Local mean $\pm 1\sigma$')
+
+# High-redshift points (corrected)
+ax.errorbar(alpaka['z'], alpaka['B_corr'], yerr=alpaka['B_corr_err'],
+            fmt='o', color='blue', capsize=3, elinewidth=1.5,
+            label='ALPAKA high-$z$ sample (corrected)')
+
+ax.set_xlabel(r'Redshift $z$')
+ax.set_ylabel(r'$\mathcal{B}(z)$')
+ax.set_xlim(-0.1, 2.5)
+ax.set_ylim(0, 0.5)
+ax.legend(loc='upper right')
+plt.tight_layout()
+
+output_path = os.path.join(script_dir, 'Bz_plot.png')
+plt.savefig(output_path, dpi=300)
+plt.show()
+
+print(f"Figure saved to {output_path}")
