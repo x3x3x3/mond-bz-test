@@ -36,10 +36,14 @@ We find that current data are consistent with the hypothesis, with no statistica
 
 └── code/
 
-└── mond_bz_analysis.py # Core analysis and plotting functions
+│ ├── mond_bz_analysis.py # Core analysis and plotting functions
 
 └── data/
+│ ├── SPARC_Lelli2016c.mrt # SPARC galaxy sample (Lelli+2016)
 
+│ ├── MassModels_Lelli2016c.mrt # SPARC rotation curves (Lelli+2016)
+
+│ └── alpaka_rar.csv # ALPAKA high-z sample (Rizzo+2023)
 
 
 ## Quick Start
