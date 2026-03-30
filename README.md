@@ -39,6 +39,7 @@ We find that current data are consistent with the hypothesis, with no statistica
 │ ├── mond_bz_analysis.py # Core analysis and plotting functions
 
 └── data/
+
 │ ├── SPARC_Lelli2016c.mrt # SPARC galaxy sample (Lelli+2016)
 
 │ ├── MassModels_Lelli2016c.mrt # SPARC rotation curves (Lelli+2016)
