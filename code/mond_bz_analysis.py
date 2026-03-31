@@ -183,11 +183,11 @@ def main():
 
     # ---------- Step 4: Deep-MOND regime selection (CORRECT PHYSICAL DEFINITION) ----------
     print("\n[4/8] Selecting deep-MOND regime...")
-    # ✅ Strict deep-MOND: a_N < 0.1*a0 (standard MOND definition, Milgrom 1983)
+    # Strict deep-MOND: a_N < 0.1*a0 (standard MOND definition, Milgrom 1983)
     deep_mask = df["a_N_SI"] < (0.1 * A0_THEORY_Z0)
     df_deep = df[deep_mask].copy()
 
-    # ✅ Outermost radius sample: last radial point of each galaxy, a_N < 0.2*a0 (follow Lelli et al. 2017)
+    # Outermost radius sample: last radial point of each galaxy, a_N < 0.2*a0 (follow Lelli et al. 2017)
     df_outer = df.sort_values(["Galaxy", "R_kpc"]).groupby("Galaxy").last().reset_index()
     df_outer_deep = df_outer[df_outer["a_N_SI"] < (0.2 * A0_THEORY_Z0)].copy()
 
