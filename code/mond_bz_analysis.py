@@ -1,3 +1,4 @@
+
 """
 Full Reproducible Analysis for MNRAS Letters:
 "A fully reproducible test of the cosmological scaling of the MOND critical acceleration"
@@ -25,7 +26,7 @@ KPC_TO_M = 3.085677581491367e19   # 1 kpc = 3.0857e19 m
 MPC_TO_M = 3.085677581491367e22   # 1 Mpc = 3.0857e22 m
 KM_S_TO_M_S = 1000                # 1 km/s = 1000 m/s
 
-# Cosmological parameters (Planck 2018, Planck Collaboration et al. 2018)
+# Cosmological parameters (Planck 2018, Planck Collaboration et al. 2020)
 H0 = 67.4                         # Hubble constant at z=0 (km/s/Mpc)
 OMEGA_M = 0.311
 OMEGA_LAMBDA = 0.689
@@ -310,8 +311,8 @@ def main():
     plt.tight_layout()
 
     # Save plot
-    plt.savefig("Bz_publication_plot.png", dpi=300, bbox_inches="tight")
-    plt.savefig("Bz_publication_plot.pdf", bbox_inches="tight")
+    plt.savefig("image.png", dpi=300, bbox_inches="tight")
+    plt.savefig("image.pdf", bbox_inches="tight")
     plt.close()
 
     # Save result tables
@@ -328,8 +329,7 @@ def main():
     print(f"Core result: SPARC deep-MOND B = {B_deep_wmean:.4f} ± {B_deep_wse:.4f}")
     print(f"Core result: SPARC outermost B = {B_outer_wmean:.4f} ± {B_outer_wse:.4f}")
     print(f"Core result: ALPAKA mean B = {B_arr.mean():.4f}, evolution slope = {slope:.3f} ± {slope_err:.3f}")
-    print("\n Generated files:")
-    print("  - plot: Bz_publication_plot.png / pdf")
+    print("\nGenerated files:image.png / pdf")
     print("  - Result table: sparc_deep_mond_final_results.csv")
     print("  - Result table: sparc_outer_radius_final_results.csv")
     print("="*100)
