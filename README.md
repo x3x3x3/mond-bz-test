@@ -20,3 +20,18 @@ We test the hypothesis that galaxy dynamics are globally normalized by the cosmi
 - Filtered $H_0^{\rm dyn} = 61.0 \pm 36.6$ km/s/Mpc (MAD)
 
 ## Repository Structure
+├── code/final_scaling_analysis.py # Main analysis script (generates all figures and outputs)
+├── sparc_scaling_data.csv # Processed data for all 3252 radial points
+├── figure1_collapse_with_insets.pdf # Main figure 1: scaling collapse + insets
+├── figure2_shuffle_test.pdf # Main figure 2: shuffle test
+├── supp_combined.pdf # Supplementary figure (2x2 panel)
+├── main.tex # LaTeX source for the manuscript
+├── supplementary.tex # LaTeX source for supplementary material
+├── references.bib # Bibliography
+├── README.md # This file
+└── data/
+├── hizels_kinematics.csv # HiZELS kinematics (Gillman+2019) — optional
+├── hizels_properties.csv # HiZELS properties (Gillman+2019) — optional
+├── SPARC/
+│     ├── table1.dat # SPARC galaxy sample (from Lelli+2016)
+│     ├── table2.dat # SPARC mass models (from Lelli+2016)
