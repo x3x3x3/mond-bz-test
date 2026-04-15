@@ -28,7 +28,7 @@ We test the hypothesis that galaxy dynamics are globally normalized by the cosmi
 
 Install the dependencies via pip:
 
-```bash
+
 pip install numpy pandas matplotlib scipy
 python final_scaling_analysis.py
 
