@@ -30,6 +30,7 @@ Install the dependencies via pip:
 
 
 pip install numpy pandas matplotlib scipy
+
 python final_scaling_analysis.py
 
 
