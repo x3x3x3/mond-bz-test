@@ -19,6 +19,36 @@ We test the hypothesis that galaxy dynamics are globally normalized by the cosmi
 - Unfiltered $H_0^{\rm dyn} = 61.8 \pm 45.5$ km/s/Mpc (MAD)
 - Filtered $H_0^{\rm dyn} = 61.0 \pm 36.6$ km/s/Mpc (MAD)
 
+
+## Data Sources
+
+- **SPARC**: [Spitzer Photometry and Accurate Rotation Curves](http://astroweb.cwru.edu/SPARC/) (Lelli et al. 2016, AJ, 152, 157). The required files are `table1.dat` and `table2.dat`. Place them in `data/SPARC/`.
+- **HiZELS** (illustrative only): Kinematic data from Gillman et al. (2019, MNRAS, 486, 175). The files `hizels_kinematics.csv` and `hizels_properties.csv` are optional; if not present, the script will skip the HiZELS overlay and still run successfully.
+- 
+
+Install the dependencies via pip:
+
+```bash
+pip install numpy pandas matplotlib scipy
+python final_scaling_analysis.py
+
+
+
+
+Outputs:
+
+figure1_collapse_with_insets.pdf — main collapse figure
+
+figure2_shuffle_test.pdf — shuffle test figure
+
+supp_combined.pdf — supplementary 2x2 panel figure
+
+sparc_scaling_data.csv — all processed data points
+
+Console output with key statistics (medians, correlations, $H_0$ values)
+
+
+
 ## Repository Structure
 ├── code/final_scaling_analysis.py # Main analysis script (generates all figures and outputs)
 
