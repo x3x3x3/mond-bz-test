@@ -1,54 +1,22 @@
-# mond-bz-test
+# Cosmic Scaling of Galaxy Dynamics
 
-# A test of the cosmological scaling of MOND's critical acceleration
+[![arXiv](https://img.shields.io/badge/arXiv-XXXX.XXXXX-b31b1b.svg)](https://arxiv.org/abs/XXXX.XXXXX)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-This repository contains the full reproducibility materials for the paper:
-> **Wenhao Xiong**, 2026, *Monthly Notices of the Royal Astronomical Society Letters*, submitted.
+This repository contains the complete analysis code, processed data, and figure-generation scripts for the paper:
 
----
+**"Local Galaxy Dynamics Normalized by the Cosmic Acceleration Scale"**  
+*Wenhao Xiong*  
+Submitted to MNRAS Letters (2026)
 
-## Abstract
-Modified Newtonian Dynamics (MOND) is built on a universal critical acceleration $a_0$, with a long-standing numerical coincidence between the local best-fit $a_0$ and $cH_0/(2\pi)$. Previous tests of $a_0$'s cosmic evolution have been limited by baryonic modeling systematics and the narrow applicability of the deep-MOND approximation.
+## Overview
 
-Here we define a dimensionless observable $\mathcal{B}(z) \equiv a_{\rm tot}^2/(c H(z) a_{\rm N})$, which cancels structural systematics and directly probes $a_0(z)/(cH(z))$ in the weak-acceleration regime. Under the hypothesis $a_0(z) = cH(z)/(2\pi)$, $\mathcal{B}(z)$ is predicted to be a universal constant $1/(2\pi) \approx 0.159$.
+We test the hypothesis that galaxy dynamics are globally normalized by the cosmic acceleration scale $a_z = cH_0/(2\pi)$. Using 3252 independent radial points from 161 SPARC galaxies, we compute dimensionless variables $x \equiv a_N/a_z$ and $y \equiv a_{\rm tot}/a_z$. The data collapse onto a tight empirical relation $y = F(x)$ with an intrinsic scatter of $\sim 0.12$ dex. A shuffle test ($p < 10^{-4}$) confirms the collapse is not an algebraic artifact. We also infer a dynamical Hubble constant $H_0^{\rm dyn}$ from each galaxy, finding median values consistent with Planck.
 
-We test this prediction with three complementary, published datasets:
-1.  **175 nearby SPARC galaxies** (Lelli et al. 2016)
-2.  **1207 radial acceleration points** from the SPARC sample in the strict deep-MOND regime ($a_{\rm tot} < 0.1a_0$)
-3.  **5 high-redshift regular rotating disk galaxies** ($z=0.561-2.103$) from the ALMA ALPAKA survey (Rizzo et al. 2023), selected as the 5 D-class galaxies with the highest kinematic quality
-
-We find that current data are consistent with the hypothesis, with no statistically significant evidence for redshift evolution. Our findings serve as a preliminary consistency check for the proposed cosmological scaling of $a_0$.
-
----
+**Key results:**
+- Median $x = 0.220 \pm 0.012$, with 75% of points in the weak-field regime ($x < 1$)
+- Spearman $\rho = 0.872$ between $\log x$ and $\log y$
+- Unfiltered $H_0^{\rm dyn} = 61.8 \pm 45.5$ km/s/Mpc (MAD)
+- Filtered $H_0^{\rm dyn} = 61.0 \pm 36.6$ km/s/Mpc (MAD)
 
 ## Repository Structure
-├── README.md # This file
-
-├── LICENSE # MIT License
-
-├── main.tex # Main MNRAS Letter manuscript (as submitted)
-
-├── supplementary.tex # Supplementary material (as submitted)
-
-├── references.bib # BibTeX references
-
-├── image.png # Figure 1 in the paper
-
-└── code/
-
-│ ├── mond_bz_analysis.py # Core analysis and plotting functions
-
-└── data/
-
-│ ├── SPARC_Lelli2016c.mrt # SPARC galaxy sample (Lelli+2016)
-
-│ ├── MassModels_Lelli2016c.mrt # SPARC rotation curves (Lelli+2016)
-
-│ └── alpaka_rar.csv # ALPAKA high-z sample (Rizzo+2023)
-
-
-## Quick Start
-```bash
-pip install numpy pandas scipy matplotlib
-
-python code/mond_bz_analysis.py     
