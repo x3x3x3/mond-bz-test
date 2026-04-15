@@ -36,7 +36,9 @@ python final_scaling_analysis.py
 
 
 
-Outputs:
+
+
+## Outputs:
 
 figure1_collapse_with_insets.pdf — main collapse figure
 
