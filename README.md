@@ -1,8 +1,5 @@
 # Cosmic Scaling of Galaxy Dynamics
 
-[![arXiv](https://img.shields.io/badge/arXiv-XXXX.XXXXX-b31b1b.svg)](https://arxiv.org/abs/XXXX.XXXXX)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
 This repository contains the complete analysis code, processed data, and figure-generation scripts for the paper:
 
 **"Local Galaxy Dynamics Normalized by the Cosmic Acceleration Scale"**  
@@ -31,7 +28,7 @@ Install the dependencies via pip:
 
 pip install numpy pandas matplotlib scipy
 
-python final_scaling_analysis.py
+python code/final_scaling_analysis.py
 
 
 
